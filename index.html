@@ -126,6 +126,10 @@
 <div class="bg-tech-item st-rocket">🚀</div>
 <div class="bg-tech-item st-robot">🤖</div>
 <div class="bg-tech-item st-bolt">⚡</div>
+<div id="users-container" style="margin-top: 25px; text-align: left; display: none;">
+  <h3 style="color: #2d2d3a; font-size: 18px; margin-bottom: 10px;">Пользователи:</h3>
+  <ul id="users-list" style="padding-left: 20px; color: #4b5563; font-size: 14px; max-height: 150px; overflow-y: auto;"></ul>
+</div>
 
 <div class="wrapper">
   <div class="login-card">
@@ -134,39 +138,67 @@
     <button class="btn btn-github" id="github-btn">Войти через GitHub</button>
   </div>
 </div>
-
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+// Импорт методов Realtime Database
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyA7Z8zQZEsuu9iV6Tn_1GvxF_S7HZ3I5yI",
-    authDomain: "bibizyanki-2ab31.firebaseapp.com",
-    projectId: "bibizyanki-2ab31",
-    storageBucket: "bibizyanki-2ab31.firebasestorage.app",
-    messagingSenderId: "1094047901241",
-    appId: "1:1094047901241:web:6112780c6a627ae4248fe8"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyA7Z8zQZEsuu9iV6Tn_1GvxF_S7HZ3I5yI",
+  authDomain: "bibizyanki-2ab31.firebaseapp.com",
+  projectId: "bibizyanki-2ab31",
+  storageBucket: "bibizyanki-2ab31.firebasestorage.app",
+  messagingSenderId: "1094047901241",
+  appId: "1:1094047901241:web:6112780c6a627ae4248fe8",
+  databaseURL: "https://bibizyanki-2ab31-default-rtdb.firebaseio.com" // Явно указываем URL БД
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app); // Инициализируем БД
 
-  const googleProvider = new GoogleAuthProvider();
-  const githubProvider = new GithubAuthProvider();
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
-  async function login(provider) {
-    try {
-      const result = await signInWithPopup(auth, provider); [1]
-      alert(`Привет, ${result.user.displayName || 'пользователь'}!`);
-    } catch (error) {
-      console.error("Ошибка входа:", error);
-      alert(`Ошибка авторизации. Проверьте консоль браузера и настройки доменов.`);
-    }
+// Слушаем изменения в 'users' в реальном времени и обновляем интерфейс
+onValue(ref(db, 'users'), (snapshot) => {
+  const users = snapshot.val();
+  const listElement = document.getElementById('users-list');
+  listElement.innerHTML = '';
+  
+  if (users) {
+    document.getElementById('users-container').style.display = 'block';
+    Object.values(users).forEach(user => {
+      const li = document.createElement('li');
+      li.style.marginBottom = '5px';
+      li.textContent = `${user.displayName || 'Аноним'} (${user.email || 'нет email'})`;
+      listElement.appendChild(li);
+    });
   }
+});
 
-  document.getElementById('google-btn').onclick = () => login(googleProvider);
-  document.getElementById('github-btn').onclick = () => login(githubProvider);
+async function login(provider) {
+  try {
+    const result = await signInWithPopup(auth, provider); [1]
+    const user = result.user;
+    
+    // Записываем данные вошедшего пользователя в ветку users/uid
+    await set(ref(db, 'users/' + user.uid), {
+      displayName: user.displayName,
+      email: user.email,
+      lastLogin: Date.now()
+    });
+
+    alert(`Привет, ${user.displayName || 'пользователь'}!`);
+  } catch (error) {
+    console.error("Ошибка входа:", error);
+    alert(`Ошибка авторизации. Проверьте консоль.`);
+  }
+}
+
+document.getElementById('google-btn').onclick = () => login(googleProvider);
+document.getElementById('github-btn').onclick = () => login(githubProvider);
+
+
 </script>
-
-</body>
-</html>
