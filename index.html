@@ -3,202 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Вход в систему</title>
+  <title>Вход</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .wrapper {
-      position: relative;
-      z-index: 10;
-    }
-
-    /* НЕОБЫЧНАЯ КАРТОЧКА */
-    .login-card {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px);
-      padding: 50px 40px;
-      /* Асимметричные углы */
-      border-radius: 60px 20px 60px 20px;
-      /* Неоновый градиентный контур и свечение */
-      box-shadow: 0 0 30px rgba(236, 72, 153, 0.25), 0 15px 45px rgba(0, 0, 0, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.7);
-      text-align: center;
-      width: 320px;
-      position: relative;
-      z-index: 10;
-      
-      /* Анимация появления при загрузке */
-      animation: cardAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      opacity: 0;
-      transform: scale(0.85);
-    }
-
-    @keyframes cardAppear {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    h2 {
-      color: #2d2d3a;
-      margin-bottom: 35px;
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      margin: 12px 0;
-      border: none;
-      border-radius: 16px; /* Округлые кнопки гармонируют с плашкой */
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-google { 
-      background-color: #4285f4; 
-      color: #ffffff; 
-      box-shadow: 0 4px 15px rgba(66, 133, 244, 0.35);
-    }
-    .btn-google:hover { 
-      background-color: #357ae8; 
-      transform: translateY(-3px) scale(1.02); 
-    }
-    
-    .btn-github { 
-      background-color: #24292e; 
-      color: #ffffff; 
-      box-shadow: 0 4px 15px rgba(36, 41, 46, 0.35);
-    }
-    .btn-github:hover { 
-      background-color: #1a1e22; 
-      transform: translateY(-3px) scale(1.02); 
-    }
-
-    /* Контурный фон и элементы */
-    .bg-drawing { position: absolute; pointer-events: none; z-index: 1; opacity: 0.12; }
-    @keyframes rotate-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .drawing-orbit { top: 5%; left: 8%; width: 280px; height: 280px; animation: rotate-slow 30s linear infinite; }
-    .drawing-grid { bottom: 5%; right: 8%; width: 320px; height: 320px; animation: rotate-slow 45s linear infinite reverse; }
-
-    .bg-tech-item { position: absolute; font-size: 75px; opacity: 0.14; user-select: none; pointer-events: none; z-index: 1; }
-    @keyframes float-slow-1 { 0%, 100% { transform: translateY(0px) rotate(-5deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
-    @keyframes float-slow-2 { 0%, 100% { transform: translateY(0px) rotate(10deg); } 50% { transform: translateY(-25px) rotate(-10deg); } }
-    .st-laptop { top: 12%; right: 18%; animation: float-slow-1 8s ease-in-out infinite; }
-    .st-rocket { bottom: 15%; left: 15%; animation: float-slow-2 10s ease-in-out infinite; }
-    .st-robot { bottom: 20%; right: 15%; animation: float-slow-1 9s ease-in-out infinite; }
-    .st-bolt { top: 22%; left: 18%; animation: float-slow-2 7.5s ease-in-out infinite; }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;position:relative}
+    .wrapper{position:relative;z-index:10}
+    .login-card{background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);padding:35px 30px;border-radius:60px 20px;box-shadow:0 0 30px rgba(236,72,153,0.25),0 15px 45px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.7);text-align:center;width:320px;position:relative;z-index:10;animation:cardAppear 0.8s cubic-bezier(0.175,0.885,0.32,1.275) forwards;opacity:0;transform:scale(0.85)}
+    @keyframes cardAppear{to{opacity:1;transform:scale(1)}}
+    h2{color:#2d2d3a;margin-bottom:15px;font-size:24px;font-weight:700}
+    .form-input{width:100%;padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:12px;font-size:13px;box-sizing:border-box}
+    .btn{width:100%;padding:12px;margin:6px 0;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s ease}
+    .btn-google{background:#4285f4;color:#fff;box-shadow:0 4px 15px rgba(66,133,244,0.35)}
+    .btn-github{background:#24292e;color:#fff;box-shadow:0 4px 15px rgba(36,41,46,0.35)}
+    .bg-drawing{position:absolute;pointer-events:none;z-index:1;opacity:0.12}
+    @keyframes rotate-slow{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    .drawing-orbit{top:5%;left:8%;width:280px;height:280px;animation:rotate-slow 30s linear infinite}
+    .drawing-grid{bottom:5%;right:8%;width:320px;height:320px;animation:rotate-slow 45s linear infinite reverse}
+    .bg-tech-item{position:absolute;font-size:75px;opacity:0.14;user-select:none;pointer-events:none;z-index:1}
+    @keyframes float-slow-1{0%,100%{transform:translateY(0px) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+    @keyframes float-slow-2{0%,100%{transform:translateY(0px) rotate(10deg)}50%{transform:translateY(-25px) rotate(-10deg)}}
+    .st-laptop{top:12%;right:18%;animation:float-slow-1 8s ease-in-out infinite}
+    .st-rocket{bottom:15%;left:15%;animation:float-slow-2 10s ease-in-out infinite}
+    .st-robot{bottom:20%;right:15%;animation:float-slow-1 9s ease-in-out infinite}
+    .st-bolt{top:22%;left:18%;animation:float-slow-2 7.5s ease-in-out infinite}
   </style>
 </head>
 <body>
-
-<svg class="bg-drawing drawing-orbit" viewBox="0 0 100 100">
-  <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#ffffff" stroke-width="1.5" transform="rotate(30 50 50)" />
-  <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#ffffff" stroke-width="1.5" transform="rotate(-30 50 50)" />
-  <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#ffffff" stroke-width="1.5" transform="rotate(90 50 50)" />
-  <circle cx="50" cy="50" r="6" fill="none" stroke="#ffffff" stroke-width="2" />
-</svg>
-
-<svg class="bg-drawing drawing-grid" viewBox="0 0 100 100">
-  <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="#ffffff" stroke-width="1.2" />
-  <polygon points="50,20 80,35 80,65 50,80 20,65 20,35" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3" />
-  <line x1="50" y1="5" x2="50" y2="95" stroke="#ffffff" stroke-width="1" />
-  <line x1="5" y1="27.5" x2="95" y2="72.5" stroke="#ffffff" stroke-width="1" />
-  <line x1="95" y1="27.5" x2="5" y2="72.5" stroke="#ffffff" stroke-width="1" />
-</svg>
-
-<div class="bg-tech-item st-laptop">💻</div>
-<div class="bg-tech-item st-rocket">🚀</div>
-<div class="bg-tech-item st-robot">🤖</div>
-<div class="bg-tech-item st-bolt">⚡</div>
-<div id="users-container" style="margin-top: 25px; text-align: left; display: none;">
-  <h3 style="color: #2d2d3a; font-size: 18px; margin-bottom: 10px;">Пользователи:</h3>
-  <ul id="users-list" style="padding-left: 20px; color: #4b5563; font-size: 14px; max-height: 150px; overflow-y: auto;"></ul>
-</div>
-
+<svg class="bg-drawing drawing-orbit" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#fff" stroke-width="1.5" transform="rotate(30 50 50)"/><ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#fff" stroke-width="1.5" transform="rotate(-30 50 50)"/><ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#fff" stroke-width="1.5" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="6" fill="none" stroke="#fff" stroke-width="2"/></svg>
+<svg class="bg-drawing drawing-grid" viewBox="0 0 100 100"><polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="#fff" stroke-width="1.2"/><polygon points="50,20 80,35 80,65 50,80 20,65 20,35" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3"/><line x1="50" y1="5" x2="50" y2="95" stroke="#fff" stroke-width="1"/><line x1="5" y1="27.5" x2="95" y2="72.5" stroke="#fff" stroke-width="1"/><line x1="95" y1="27.5" x2="5" y2="72.5" stroke="#fff" stroke-width="1"/></svg>
+<div class="bg-tech-item st-laptop">💻</div><div class="bg-tech-item st-rocket">🚀</div><div class="bg-tech-item st-robot">🤖</div><div class="bg-tech-item st-bolt">⚡</div>
 <div class="wrapper">
   <div class="login-card">
     <h2>Вход в аккаунт</h2>
+    <input type="email" id="email-input" placeholder="Введите Email" class="form-input">
+    <input type="password" id="password-input" placeholder="Введите Пароль" class="form-input">
+    <button class="btn" id="email-login-btn" style="background:#10b981;color:#fff">Войти по почте</button>
+    <button class="btn" id="email-reg-btn" style="background:#6b7280;color:#fff">Зарегистрироваться</button>
+    <div style="margin:8px 0;color:#9ca3af;font-size:13px">или через соцсети:</div>
     <button class="btn btn-google" id="google-btn">Продолжить с Google</button>
     <button class="btn btn-github" id="github-btn">Войти через GitHub</button>
+    <div id="users-container" style="margin-top:15px;text-align:left;display:none;font-size:12px;color:#4b5563">
+      <strong>Пользователи:</strong><ul id="users-list" style="padding-left:15px;max-height:80px;overflow-y:auto"></ul>
+    </div>
+    <hr style="border:0;border-top:1px solid #ddd;margin:15px 0">
+    <div style="background:rgba(255,255,255,0.5);padding:10px;border-radius:15px;text-align:left">
+      <h3 style="color:#2d2d3a;margin:0 0 5px 0;font-size:14px;text-align:center">💾 База данных</h3>
+      <input type="text" id="custom-db-input" placeholder="Text..." class="form-input">
+      <button class="btn" id="custom-db-save-btn" style="background:#3b82f6;color:#fff;padding:8px;margin:5px 0 0 0">Сохранить</button>
+    </div>
   </div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-// Импорт методов Realtime Database
+import { getAuth, signInWithPopup, GoogleAuthProvider, GithubAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"; [1, 2.1]
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
-
-const firebaseConfig = {
+const config = {
   apiKey: "AIzaSyA7Z8zQZEsuu9iV6Tn_1GvxF_S7HZ3I5yI",
   authDomain: "bibizyanki-2ab31.firebaseapp.com",
   projectId: "bibizyanki-2ab31",
   storageBucket: "bibizyanki-2ab31.firebasestorage.app",
   messagingSenderId: "1094047901241",
   appId: "1:1094047901241:web:6112780c6a627ae4248fe8",
-  databaseURL: "https://bibizyanki-2ab31-default-rtdb.firebaseio.com" // Явно указываем URL БД
+  databaseURL: "https://bibizyanki-2ab31-default-rtdb.firebaseio.com"
 };
+const app = initializeApp(config), auth = getAuth(app), db = getDatabase(app);
+const googleProvider = new GoogleAuthProvider(), githubProvider = new GithubAuthProvider();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app); // Инициализируем БД
-
-const googleProvider = new GoogleAuthProvider();
-const githubProvider = new GithubAuthProvider();
-
-// Слушаем изменения в 'users' в реальном времени и обновляем интерфейс
-onValue(ref(db, 'users'), (snapshot) => {
-  const users = snapshot.val();
-  const listElement = document.getElementById('users-list');
-  listElement.innerHTML = '';
-  
+onValue(ref(db, 'users'), (s) => {
+  const users = s.val(), list = document.getElementById('users-list'); list.innerHTML = '';
   if (users) {
     document.getElementById('users-container').style.display = 'block';
-    Object.values(users).forEach(user => {
+    Object.values(users).forEach(u => {
       const li = document.createElement('li');
-      li.style.marginBottom = '5px';
-      li.textContent = `${user.displayName || 'Аноним'} (${user.email || 'нет email'})`;
-      listElement.appendChild(li);
+      li.textContent = `${u.displayName || 'Аноним'} (${u.email || 'нет email'})`;
+      list.appendChild(li);
     });
   }
 });
 
 async function login(provider) {
   try {
-    const result = await signInWithPopup(auth, provider); [1]
-    const user = result.user;
-    
-    // Записываем данные вошедшего пользователя в ветку users/uid
-    await set(ref(db, 'users/' + user.uid), {
-      displayName: user.displayName,
-      email: user.email,
-      lastLogin: Date.now()
-    });
-
-    alert(`Привет, ${user.displayName || 'пользователь'}!`);
-  } catch (error) {
-    console.error("Ошибка входа:", error);
-    alert(`Ошибка авторизации. Проверьте консоль.`);
-  }
+    const res = await signInWithPopup(auth, provider); [1]
+    const u = res.user;
+    await set(ref(db, 'users/' + u.uid), { displayName: u.displayName, email: u.email, lastLogin: Date.now() });
+    alert(`Привет, ${u.displayName || 'пользователь'}!`);
+  } catch (e) { console.error(e); }
 }
-
 document.getElementById('google-btn').onclick = () => login(googleProvider);
 document.getElementById('github-btn').onclick = () => login(githubProvider);
 
+document.getElementById('email-reg-btn').onclick = async () => {
+  const email = document.getElementById('email-input').value, pass = document.getElementById('password-input').value;
+  try {
+    const r = await createUserWithEmailAndPassword(auth, email, pass); [2.1]
+    await set(ref(db, 'users/' + r.user.uid), { displayName: email.split('@')[0], email, lastLogin: Date.now() });
+    alert(`Успех: ${email}`);
+  } catch (e) { alert(e.message); }
+};
 
+document.getElementById('email-login-btn').onclick = async () => {
+  const email = document.getElementById('email-input').value, pass = document.getElementById('password-input').value;
+  try {
+    const r = await signInWithEmailAndPassword(auth, email, pass); [2.1]
+    await set(ref(db, 'users/' + r.user.uid), { displayName: r.user.displayName || email.split('@')[0], email, lastLogin: Date.now() });
+    alert(`Рады видеть, ${email}!`);
+  } catch (e) { alert(e.message); }
+};
+
+document.getElementById('custom-db-save-btn').onclick = async () => {
+  const text = document.getElementById('custom-db-input').value;
+  if (!text) return alert("Введите текст!");
+  try {
+    await set(ref(db, 'messages/' + Date.now()), { messageText: text, savedAt: new Date().toLocaleString() });
+    alert("Сохранено в БД!"); document.getElementById('custom-db-input').value = '';
+  } catch (e) { alert(e.message); }
+};
 </script>
+</body>
+</html>
