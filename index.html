@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Вход</title>
   <style>
     body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;position:relative}
@@ -42,13 +41,17 @@
     <button class="btn btn-google" id="google-btn">Продолжить с Google</button>
     <button class="btn btn-github" id="github-btn">Войти через GitHub</button>
     <div id="users-container" style="margin-top:15px;text-align:left;display:none;font-size:12px;color:#4b5563">
-      <strong>Пользователи:</strong><ul id="users-list" style="padding-left:15px;max-height:80px;overflow-y:auto"></ul>
+      <strong>Пользователи:</strong><ul id="users-list" style="padding-left:15px;max-height:65px;overflow-y:auto"></ul>
     </div>
     <hr style="border:0;border-top:1px solid #ddd;margin:15px 0">
-    <div style="background:rgba(255,255,255,0.5);padding:10px;border-radius:15px;text-align:left">
-      <h3 style="color:#2d2d3a;margin:0 0 5px 0;font-size:14px;text-align:center">💾 База данных</h3>
-      <input type="text" id="custom-db-input" placeholder="Text..." class="form-input">
+    <div style="background:rgba(255,255,255,0.4);padding:10px;border-radius:15px;text-align:left">
+      <h3 style="color:#2d2d3a;margin:0 0 5px 0;font-size:14px;text-align:center">💾 Панель БД</h3>
+      <input type="text" id="custom-db-input" placeholder="Текст для БД" class="form-input">
       <button class="btn" id="custom-db-save-btn" style="background:#3b82f6;color:#fff;padding:8px;margin:5px 0 0 0">Сохранить</button>
+      <!-- Едва видимая плашка для вывода последнего сообщения -->
+      <div id="msg-box" style="margin-top:8px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.3);border:1px dashed rgba(0,0,0,0.1);display:none;font-size:11px;color:#4b5563">
+        <strong>Последнее:</strong> <span id="msg-text"></span>
+      </div>
     </div>
   </div>
 </div>
@@ -68,54 +71,59 @@ const config = {
 const app = initializeApp(config), auth = getAuth(app), db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider(), githubProvider = new GithubAuthProvider();
 
-onValue(ref(db, 'users'), (s) => {
-  const users = s.val(), list = document.getElementById('users-list'); list.innerHTML = '';
-  if (users) {
-    document.getElementById('users-container').style.display = 'block';
-    Object.values(users).forEach(u => {
-      const li = document.createElement('li');
-      li.textContent = `${u.displayName || 'Аноним'} (${u.email || 'нет email'})`;
-      list.appendChild(li);
+onValue(ref(db,'users'),(s)=>{
+  const users=s.val(),list=document.getElementById('users-list');list.innerHTML='';
+  if(users){
+    document.getElementById('users-container').style.display='block';
+    Object.values(users).forEach(u=>{
+      const li=document.createElement('li');li.textContent=`${u.displayName||'Аноним'} (${u.email||'нет email'})`;list.appendChild(li);
     });
   }
 });
 
-async function login(provider) {
-  try {
-    const res = await signInWithPopup(auth, provider); [1]
-    const u = res.user;
-    await set(ref(db, 'users/' + u.uid), { displayName: u.displayName, email: u.email, lastLogin: Date.now() });
-    alert(`Привет, ${u.displayName || 'пользователь'}!`);
-  } catch (e) { console.error(e); }
+// Слушаем последнее сообщение из БД в реальном времени
+onValue(ref(db,'messages'),(s)=>{
+  const msgs=s.val(),box=document.getElementById('msg-box'),txt=document.getElementById('msg-text');
+  if(msgs){
+    const keys=Object.keys(msgs),lastMsg=msgs[keys[keys.length-1]];
+    txt.textContent=lastMsg.messageText;box.style.display='block';
+  }
+});
+
+async function login(p){
+  try{
+    const res=await signInWithPopup(auth,p);const u=res.user; [1]
+    await set(ref(db,'users/'+u.uid),{displayName:u.displayName,email:u.email,lastLogin:Date.now()});
+    alert(`Привет, ${u.displayName}!`);
+  }catch(e){console.error(e)}
 }
-document.getElementById('google-btn').onclick = () => login(googleProvider);
-document.getElementById('github-btn').onclick = () => login(githubProvider);
+document.getElementById('google-btn').onclick=()=>login(googleProvider);
+document.getElementById('github-btn').onclick=()=>login(githubProvider);
 
-document.getElementById('email-reg-btn').onclick = async () => {
-  const email = document.getElementById('email-input').value, pass = document.getElementById('password-input').value;
-  try {
-    const r = await createUserWithEmailAndPassword(auth, email, pass); [2.1]
-    await set(ref(db, 'users/' + r.user.uid), { displayName: email.split('@')[0], email, lastLogin: Date.now() });
+document.getElementById('email-reg-btn').onclick=async()=>{
+  const email=document.getElementById('email-input').value,pass=document.getElementById('password-input').value;
+  try{
+    const r=await createUserWithEmailAndPassword(auth,email,pass); [2.1]
+    await set(ref(db,'users/'+r.user.uid),{displayName:email.split('@')[0],email,lastLogin:Date.now()});
     alert(`Успех: ${email}`);
-  } catch (e) { alert(e.message); }
+  }catch(e){alert(e.message)}
 };
 
-document.getElementById('email-login-btn').onclick = async () => {
-  const email = document.getElementById('email-input').value, pass = document.getElementById('password-input').value;
-  try {
-    const r = await signInWithEmailAndPassword(auth, email, pass); [2.1]
-    await set(ref(db, 'users/' + r.user.uid), { displayName: r.user.displayName || email.split('@')[0], email, lastLogin: Date.now() });
+document.getElementById('email-login-btn').onclick=async()=>{
+  const email=document.getElementById('email-input').value,pass=document.getElementById('password-input').value;
+  try{
+    const r=await signInWithEmailAndPassword(auth,email,pass); [2.1]
+    await set(ref(db,'users/'+r.user.uid),{displayName:r.user.displayName||email.split('@')[0],email,lastLogin:Date.now()});
     alert(`Рады видеть, ${email}!`);
-  } catch (e) { alert(e.message); }
+  }catch(e){alert(e.message)}
 };
 
-document.getElementById('custom-db-save-btn').onclick = async () => {
-  const text = document.getElementById('custom-db-input').value;
-  if (!text) return alert("Введите текст!");
-  try {
-    await set(ref(db, 'messages/' + Date.now()), { messageText: text, savedAt: new Date().toLocaleString() });
-    alert("Сохранено в БД!"); document.getElementById('custom-db-input').value = '';
-  } catch (e) { alert(e.message); }
+document.getElementById('custom-db-save-btn').onclick=async()=>{
+  const text=document.getElementById('custom-db-input').value;if(!text)return alert("Введите текст!");
+  try{
+    await set(ref(db,'messages/'+Date.now()),{messageText:text,savedAt:new Date().toLocaleString()});
+    document.getElementById('custom-db-input').value='';
+  }catch(e){alert(e.message)}
 };
 </script>
 </body>
